@@ -34862,7 +34862,6 @@
                   },
                   "repeatability": {
                     "type": "object",
-                    "nullable": true,
                     "example": {
                       "type": "WEEKLY",
                       "interval": 3,
@@ -34876,7 +34875,6 @@
                       {
                         "type": "object",
                         "title": "Daily",
-                        "nullable": true,
                         "required": [
                           "type"
                         ],
@@ -34951,7 +34949,6 @@
                           "type",
                           "days"
                         ],
-                        "nullable": true,
                         "properties": {
                           "type": {
                             "type": "string",
@@ -35046,7 +35043,6 @@
                           "type",
                           "day"
                         ],
-                        "nullable": true,
                         "properties": {
                           "type": {
                             "type": "string",
@@ -35130,7 +35126,6 @@
                         "required": [
                           "type"
                         ],
-                        "nullable": true,
                         "properties": {
                           "type": {
                             "type": "string",
@@ -35208,7 +35203,6 @@
                         "required": [
                           "type"
                         ],
-                        "nullable": true,
                         "properties": {
                           "type": {
                             "type": "string",

@@ -54,6 +54,15 @@ jq '
         .parameters = $newParams
       )
     )
+  ) |
+
+  # Remove nullable from repeatability property and its oneOf elements
+  # Walk through the JSON and when we find a repeatability property with oneOf, remove nullable from the property itself and each oneOf element
+  walk(
+    if type == "object" and .repeatability? and (.repeatability.oneOf? | type == "array") then
+      .repeatability |= (del(.nullable) | .oneOf |= map(if type == "object" then del(.nullable) else . end))
+    else .
+    end
   )
 ' "$SPEC_FILE" > "${SPEC_FILE}.tmp" && mv "${SPEC_FILE}.tmp" "$SPEC_FILE"
 

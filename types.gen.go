@@ -4322,7 +4322,7 @@ type PostWorkordersJSONBody struct {
 
 	// ProcedureTemplateId ID of the procedure template to attach
 	ProcedureTemplateId *float32                              `json:"procedureTemplateId"`
-	Repeatability       *PostWorkordersJSONBody_Repeatability `json:"repeatability"`
+	Repeatability       *PostWorkordersJSONBody_Repeatability `json:"repeatability,omitempty"`
 
 	// RequesterId ID or email of the user who requested the work order
 	RequesterId *PostWorkordersJSONBody_RequesterId `json:"requesterId,omitempty"`
