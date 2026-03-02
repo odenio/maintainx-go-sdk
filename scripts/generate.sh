@@ -56,11 +56,32 @@ jq '
     )
   ) |
 
-  # Remove nullable from repeatability property and its oneOf elements
-  # Walk through the JSON and when we find a repeatability property with oneOf, remove nullable from the property itself and each oneOf element
+  # Remove nullable from any schema object that uses oneOf.
+  # oapi-codegen skips generating UnmarshalJSON/MarshalJSON methods when nullable:true
+  # is present alongside oneOf, leaving a bare union json.RawMessage struct that
+  # cannot be deserialized by encoding/json.
   walk(
-    if type == "object" and .repeatability? and (.repeatability.oneOf? | type == "array") then
-      .repeatability |= (del(.nullable) | .oneOf |= map(if type == "object" then del(.nullable) else . end))
+    if type == "object" and (.oneOf? | type == "array") then
+      del(.nullable)
+    else .
+    end
+  ) |
+
+  # Replace fieldValue oneOf (string|number|boolean) with x-go-type: any.
+  # oapi-codegen does not generate UnmarshalJSON for oneOf with primitives, so we
+  # use any (interface{}) which deserializes correctly for all JSON scalar types.
+  walk(
+    if type == "object" and .fieldValue? and (.fieldValue.oneOf? | type == "array") then
+      .fieldValue |= (
+        if (.oneOf | length) == 3 and
+           ([.oneOf[].type] | sort) == ["boolean", "number", "string"] then
+          {
+            "description": "Value of the field (string, number, or boolean)",
+            "x-go-type": "any"
+          }
+        else .
+        end
+      )
     else .
     end
   )
